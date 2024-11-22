@@ -31,23 +31,15 @@ def get_amount_of_comics():
 
 if __name__ == "__main__":
     load_dotenv()
-    freq = int(os.environ["POST_FREQ"])
     chat_id = os.environ["TG_CHAT_ID"]
-    parser = argparse.ArgumentParser(description="Скрипт для публикации фотографий XKCD")
-    parser.add_argument(
-        "freq", nargs="?", type=int, default=freq, help="частота публикации"
-    )
-    args = parser.parse_args()
     token = os.environ["TG_BOT_API"]
     bot = telegram.Bot(token=token)
     amount_of_comics = get_amount_of_comics()
-    while True:
-        id = randint(1, amount_of_comics)
-        try:
-            comics = get_comics(id)
-        except requests.HTTPError as error:
-            print("Некорректный ответ от сервера", error)
-        image_url, comment = comics["img"], comics["alt"]
-        bot.send_message(chat_id=chat_id, text=comment)
-        bot.send_photo(chat_id=chat_id, document=requests.get(image_url).content)
-        sleep(args.freq)
+    comics_id = randint(1, amount_of_comics)
+    try:
+        comics = get_comics(comics_id)
+    except requests.HTTPError as error:
+        print("Некорректный ответ от сервера", error)
+    image_url, comment = comics["img"], comics["alt"]
+    bot.send_message(chat_id=chat_id, text=comment)
+    bot.send_photo(chat_id=chat_id, photo=requests.get(image_url).content)
