@@ -40,6 +40,12 @@ if __name__ == "__main__":
         comics = get_comics(comics_id)
     except requests.HTTPError as error:
         print("Некорректный ответ от сервера", error)
-    image_url, comment = comics["img"], comics["alt"]
-    bot.send_message(chat_id=chat_id, text=comment)
-    bot.send_photo(chat_id=chat_id, photo=requests.get(image_url).content)
+    image_url, comment = comics["img"], comics["alt"]  
+    try:
+        response = requests.get(image_url)
+        response.raise_for_status
+    except requests.exceptions.HTTPError:
+        print("Не удалось загрузить картинку")
+    else:
+        bot.send_message(chat_id=chat_id, text=comment)
+        bot.send_photo(chat_id=chat_id, photo=requests.get(image_url).content)

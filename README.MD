@@ -20,7 +20,7 @@ pip install -r requirements.txt
 Запустите бота
 
 ```
-    python main.py
+python main.py
 ```
 В указанный телеграм канал отправится картинка и описание к ней.
 
