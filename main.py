@@ -43,9 +43,9 @@ if __name__ == "__main__":
     image_url, comment = comics["img"], comics["alt"]  
     try:
         response = requests.get(image_url)
-        response.raise_for_status
+        response.raise_for_status()
     except requests.exceptions.HTTPError:
         print("Не удалось загрузить картинку")
     else:
         bot.send_message(chat_id=chat_id, text=comment)
-        bot.send_photo(chat_id=chat_id, photo=requests.get(image_url).content)
+        bot.send_photo(chat_id=chat_id, photo=response.content)
